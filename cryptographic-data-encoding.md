@@ -79,11 +79,11 @@ The extended length flag and the sub-sub-class value take up the most significan
 
 The 1-bit extended length flag is the most significant bit of the third 6-bit word so that the case of the third letter signifies if the type tag is just one encoding unit or if it is a two encoding unit type tag and the construct has a 32-bit length. Again, this is to allow humans to "read" the third character and know if this is a small or large construct. The 1-bit extended length flag and the 3-bit sub-sub-class and the two 6-bit class and sub-class fields are designed to all fit into two 8-bit words of the binary representation. The short length field then fits into the last 8-bit word of the encoding unit. So, along with easy visual inspection when in the text representation, we also get a simple bitfield data structure for processing the binary representation.
 
-One of the hardest things to do with text representations is to extract bits out of the middle of a 6-bit word. The third word in the type tag has 1-bit for the extended length flag, a 3-bit sub-sub-class and the two most-significant bits of the length. To get the sub-sub-class value, all that is needed is to convert the encoded character to its index in the ASCII encoding table and if it is >= 32, subtract 35 and divide by 2. If it is < 32, then subtract 3 and divide by 5. The result is a number between 0 and 7 inclusive that represents the sub-sub-class.
+One of the hardest things to do with text representations is to extract bits out of the middle of a 6-bit word. The third word in the type tag has 1-bit for the extended length flag, a 3-bit sub-sub-class and the two most-significant bits of the length. To get the sub-sub-class value, all that is needed is to convert the encoded character to its index in the ASCII encoding table and do some simple math. The code below demonstrates how to get the sub-sub-class as a number between 0 and 7 inclusive.
 
 ```c=
 uint8_t i = get_index(c);
-uint8_t sscls = (i < 32) ? (i - 3) / 2 : (i - 35) / 2;
+uint8_t sscls = (i < 32) ? i / 4 : (i - 32) / 4;
 ```
 
 ### Length
@@ -218,7 +218,7 @@ Below is a table comparing the URL-Safe Base64 (B64) alphabet and the UCC alphab
 ```
 Index  Binary  B64  UCC      Index  Binary  B64  UCC
 0      000000   A    a       32     100000   g    A
-1      000001   B    b       33     100001   h    B 
+1      000001   B    b       33     100001   h    B
 2      000010   C    c       34     100010   i    C
 3      000011   D    d       35     100011   j    D
 4      000100   E    e       36     100100   k    E
@@ -269,9 +269,9 @@ Because none of these names share a common first letter so it is trivial to assi
 
 ### Application Specific Extensions
 
-UCC is designed to support constructing software systems that may want to define their own classes and sub-classes for common constructs instead of explicitly constructing them out of recursive lists. For instance, in cryptographic provenance logs there is a cryptographic construct called an "event". In software that uses UCC to store events, they can define an experimental class for provenance log (e.g. `l` for log) constructs and then give the event construct an experimental subclass (e.g. `e` for event). Then all provenance log event constructs would begin with `le`. This is an alternative to defining the log event constructs explicitly out of recursive lists which obfuscates the type.
+UCC is designed to support constructing software systems that may want to define their own classes and sub-classes for common constructs instead of explicitly constructing them out of recursive lists. For instance, cryptographic provenance logs are made up of cryptographic events. In software that uses UCC to store logs of events, provenance log constructs can use `L` for log--upper-case for experimental--and then give the event construct a sub-class `E` for event, also upper-case for experimental. Then all provenance log event constructs encoded in text begin with `LE`. This is an alternative to defining the log event constructs explicitly out of recursive lists, obfuscating the type.
 
-In many ways, developers can start off by explicitly defining their constructs as recursive list constructs during the early prototyping phase. Then as the common constructs become known, they are assigned their own experimental class and sub-class to make their encodings more pedantic and easier to read and debug. Then as the software gains wide adoption and the constructs become widely used, the experimental class code is promoted to a capitalized, non-experimental code as part of the standardization process.
+In many ways, developers start off by explicitly defining their constructs as recursive list constructs during the early prototyping phase. Then as the common constructs become known, they are assigned their own experimental class and sub-class to make their encodings more pedantic and easier to read and debug. Then as the software gains wide adoption and the constructs become widely used, the experimental class code is promoted to a lower-case, non-experimental when it becomes standardized.
 
 The following table lists the characters assigned to each class of widely used cryptographic constructs.
 
