@@ -1,6 +1,6 @@
 # Universal Cryptographic Construct Encoding
-Version: v0.0.3 Pre-Draft
-Date: July 2, 2021
+Version: v0.0.4 Pre-Draft
+Date: July 6, 2021
 License: CC BY 4.0
 Author: Dave Huseby <dwh@trustframe.com>
 Copyright: (c) TrustFrame, Inc. 2021
@@ -21,7 +21,7 @@ The diagram below illustrates how each 24-bits encoding unit is split into eithe
 
 ## Streaming
 
-UCC is designed to facilitate streaming of one or more cryptographic constructs in either the text or binary encoding. Each construct is self-describing with a type tag that contains both the type and length, in encoding units, of the encoded cryptographic construct. The diagram below illustrates the structure of a UCC stream.
+UCC is designed to facilitate streaming of one or more cryptographic constructs in either the text or binary encoding. Each construct is self-describing with a type tag that contains both the type and length, in bytes, of the encoded cryptographic construct. The diagram below illustrates the structure of a UCC stream.
 
 ```
 /-- type tag --/-- encoded data --/-- type tag --/-- encoded data --/
@@ -79,11 +79,36 @@ The extended length flag and the sub-sub-class value take up the most significan
 
 The 1-bit extended length flag is the most significant bit of the third 6-bit word so that the case of the third letter signifies if the type tag is just one encoding unit or if it is a two encoding unit type tag and the construct has a 32-bit length. Again, this is to allow humans to "read" the third character and know if this is a small or large construct. The 1-bit extended length flag and the 3-bit sub-sub-class and the two 6-bit class and sub-class fields are designed to all fit into two 8-bit words of the binary representation. The short length field then fits into the last 8-bit word of the encoding unit. So, along with easy visual inspection when in the text representation, we also get a simple bitfield data structure for processing the binary representation.
 
-One of the hardest things to do with text representations is to extract bits out of the middle of a 6-bit word. The third word in the type tag has 1-bit for the extended length flag, a 3-bit sub-sub-class and the two most-significant bits of the length. To get the sub-sub-class value, all that is needed is to convert the encoded character to its index in the ASCII encoding table and do some simple math. The code below demonstrates how to get the sub-sub-class as a number between 0 and 7 inclusive.
+One of the hardest things to do with text encodings is bit manipulation using a programming language that doesn't support it natively like C or Rust. Thankfully, even in this situation, a little intuition and math makes it possible to work with the different bits in the UCC type tag, specifically in the third 6-bit word. The following code illustrates how to use Javascript to extract the sub-sub-class bits as well as the two size bits from the third 6-bit word so that they can be combined with the fourth 6-bit word to calculate the length of the data in bytes.
 
-```c=
-uint8_t i = get_index(c);
-uint8_t sscls = (i < 32) ? i / 4 : (i - 32) / 4;
+```javascript=
+// assume the third letter in a type tag is 'o' and the fourth letter is 'H'
+// 'o' is index 14 (001110 in binary) and 'H' is index 39 (100111 in binary)
+// when decoded from the character the index value is the result
+let v1 = 14; // decode('o') -> 14
+let v2 = 39; // decode('H') -> 39
+
+// to get the sub-sub-class, we simply divide by 4 and round down
+let ssc = Math.floor(v1 / 4); // gives 3, or 011 in binary
+
+// to get the length in bytes, we use modulus, multiplication and addition
+let two_msb = v1 % 3; // isolates the two lowest bits of the third 6-bit word
+let length = (two_msb << 6) + v2; // gives 167, or 10100111 in binary
+```
+
+Even with the complicated bit pattern in the third 6-bit word, the UCC type tag layout is entirely usable. The other 1-bit flags for testing if a class or sub-class is experimental or if the type tag is a short or extended type tag, the code is even simpler. Because of the novel layout of the UCC character encoding table, simply looking at the letters to see if they are upper-case reveals the value of the 1-bit flags. If you want to write code, you must decode the letter to an integer and then test if the value is >= 32. The following code demonstrates this.
+
+```javascript=
+// assume the first letter for the class is 'K'. 'K' decodes to the value 42
+// which is 101010 in binary.
+let cls = 42; // decode('K') -> 42
+
+// it is simple to determine if the code is experimental
+if (cls >= 32) {
+  // experimental
+} else {
+  // standard
+}
 ```
 
 ### Length
@@ -93,7 +118,13 @@ The length of an encoded cryptographic construct is counted in the number of 8-b
 Given the length of the construct in bytes, the number of text characters to read after the type tag is calculated with the following code. This correctly accounts for the missing padding characters and will not read too many characters.
 
 ```c=
-size_t length_in_text = ((length << 3) + 5) / 6;
+size_t length_in_text = ((length_in_bytes << 3) + 5) / 6;
+```
+
+If your programming language of choice does not support the bit shift operator `<<` you may just multiple the length value by 8.
+
+```javascript=
+let length_in_text = Math.floor(((length_in_bytes * 8) + 5) / 6);
 ```
 
 The type tag has two ways of storing the length of the cryptographic construct: a short length 8-bit field or an extended length 32-bit field. If the size of the construct is 255 bytes or fewer, then the length value fits into the 8-bit short length field. In that case an extended length is not required and the extended length flag field is set to 0 and the third ASCII character will be lower case in the text representation. If the size of the construct is greater than 255 bytes then the construct requires an extended type tag and the third ASCII character will be upper case in the text representation. The length of the construct is encoded as a 32-bit value using the 8-bit short length field in the first encoding unit and the 24-bits in the second encoding unit to form a 32-bit extended length field. The maximum size for a cryptographic construct encoded in UCC format is 4,294,967,295 bytes, or roughly 4 GB.
@@ -116,7 +147,7 @@ struct {
 
 struct {
   uint64_t        : 16;  /* unused */
-  uint64_6 ecls   :  1;  /* exp. class */
+  uint64_t ecls   :  1;  /* exp. class */
   uint64_t cls    :  5;  /* class */
   uint64_t escls  :  1;  /* exp. sub-class */
   uint64_t scls   :  5;  /* sub-class */
@@ -453,6 +484,7 @@ Non-Typed     '_'
 ```
 
 ## Change Log
-v0.0.1 -- Initial version with novel ASCII encoding table and type tags of one or two encoding units.
-v0.0.2 -- Thanks to Sam Smith for pointing out that this won't round trip without padding so added padding.
-v0.0.3 -- More of Sam's feedback incorporated. Rearranged the ASCII encoding table so that lower-case letters/numbers are 0-31 and upper-case letters/numbers are 32-63 so that the 1-bit flags for experimental and extended length are the MSB in each of the first three ASCII characters. This makes visual "reading" of the type tag tell whether it is experimental and if it is an extended length type tag or not. Switched to "standard" types using lower case and experimental types using upper case letters. Added more sub-class and sub-sub-class values for widely used classes.
+v0.0.1, July 2, 2021 -- Initial version with novel ASCII encoding table and type tags of one or two encoding units.
+v0.0.2, July 3, 2021 -- Thanks to Sam Smith for pointing out that this won't round trip without padding so added padding.
+v0.0.3, July 5, 2021 -- More of Sam's feedback incorporated. Rearranged the ASCII encoding table so that lower-case letters/numbers are 0-31 and upper-case letters/numbers are 32-63 so that the 1-bit flags for experimental and extended length are the MSB in each of the first three ASCII characters. This makes visual "reading" of the type tag tell whether it is experimental and if it is an extended length type tag or not. Switched to "standard" types using lower case and experimental types using upper case letters. Added more sub-class and sub-sub-class values for widely used classes.
+v0.0.4, July 6, 2021 -- Added examples of how to work with the bit fields in the first three characters when using a text oriented language such as Javascript.
