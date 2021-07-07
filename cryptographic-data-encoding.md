@@ -1,11 +1,11 @@
-# Universal Cryptographic Construct Encoding
-Version: v0.0.4 Pre-Draft
-Date: July 6, 2021
-License: CC BY 4.0
-Author: Dave Huseby <dwh@trustframe.com>
-Copyright: (c) TrustFrame, Inc. 2021
+# Cryptographic Data Encoding
+* Version: v0.0.5 Pre-Draft
+* Date: July 7, 2021
+* License: CC BY 4.0
+* Author: Dave Huseby <dwh@trustframe.com>
+* Copyright: (c) TrustFrame, Inc. 2021
 
-UCC is for encoding of arbitrarily complex, self-describing cryptographic constructs using a method that simplifies both ASCII (base 64) and binary (base 2) serialization/deserialization. It has some additional novel properties (e.g. easy visual inspection of ASCII, simple parsing in binary) that make it especially useful for encoding cryptographic constructs.
+UCC is for encoding of cryptographic data as into a self-describing format using a method that simplifies both ASCII (base 64) and binary (base 2) serialization/deserialization. It has some additional novel properties (e.g. easy visual inspection of ASCII, simple parsing in binary) that make it especially useful for encoding cryptographic data.
 
 The primary, and most important, goal is that the ASCII representation of every construct begins with easy-to-learn characters associated with the different classes (e.g. cryptographic keys) and sub-classes (e.g. Ed25519 keys) to aid in debugging and visual inspection. Since most cryptographic constructs have three levels of classification (i.e. key -> algorithm -> variant/bit length) the type tags for UCC have three layers of classification: class, sub-class, and sub-sub-class. The secondary goal is that the binary representation of every construct has an easily parsed type tag to simplify serialization and deserializtion.
 
@@ -484,7 +484,8 @@ Non-Typed     '_'
 ```
 
 ## Change Log
-v0.0.1, July 2, 2021 -- Initial version with novel ASCII encoding table and type tags of one or two encoding units.
-v0.0.2, July 3, 2021 -- Thanks to Sam Smith for pointing out that this won't round trip without padding so added padding.
-v0.0.3, July 5, 2021 -- More of Sam's feedback incorporated. Rearranged the ASCII encoding table so that lower-case letters/numbers are 0-31 and upper-case letters/numbers are 32-63 so that the 1-bit flags for experimental and extended length are the MSB in each of the first three ASCII characters. This makes visual "reading" of the type tag tell whether it is experimental and if it is an extended length type tag or not. Switched to "standard" types using lower case and experimental types using upper case letters. Added more sub-class and sub-sub-class values for widely used classes.
-v0.0.4, July 6, 2021 -- Added examples of how to work with the bit fields in the first three characters when using a text oriented language such as Javascript.
+* v0.0.1, July 2, 2021 -- Initial version with novel ASCII encoding table and type tags of one or two encoding units.
+* v0.0.2, July 3, 2021 -- Thanks to Sam Smith for pointing out that this won't round trip without padding so added padding.
+* v0.0.3, July 5, 2021 -- More of Sam's feedback incorporated. Rearranged the ASCII encoding table so that lower-case letters/numbers are 0-31 and upper-case letters/numbers are 32-63 so that the 1-bit flags for experimental and extended length are the MSB in each of the first three ASCII characters. This makes visual "reading" of the type tag tell whether it is experimental and if it is an extended length type tag or not. Switched to "standard" types using lower case and experimental types using upper case letters. Added more sub-class and sub-sub-class values for widely used classes.
+* v0.0.4, July 6, 2021 -- Added examples of how to work with the bit fields in the first three characters when using a text oriented language such as Javascript.
+* v0.0.5, July 7, 2021 -- Renamed this to Cryptographic Data Encoding and pushed to [Github](https://github.com/TrustFrame/cryptographic-data-encoding)
