@@ -1,15 +1,15 @@
 # Cryptographic Data Encoding (CDE)
-* Version: v0.0.5 Pre-Draft
-* Date: July 7, 2021
-* License: CC BY 4.0
-* Author: Dave Huseby <dwh@trustframe.com>
-* Copyright: (c) TrustFrame, Inc. 2021
+Version: v0.0.6 Pre-Draft  
+Date: July 7, 2021  
+License: CC BY 4.0  
+Author: Dave Huseby <dwh@trustframe.com>  
+Copyright: (c) TrustFrame, Inc. 2021  
 
 This cryptographic data encoding (CDE) proposal is for encoding of cryptographic data as into a self-describing format using a method that simplifies both ASCII (base 64) and binary (base 2) serialization/deserialization. It has some additional novel properties (e.g. easy visual inspection of ASCII, simple parsing in binary) that make it especially useful for encoding cryptographic data.
 
 The primary, and most important, goal is that the ASCII representation of every construct begins with easy-to-learn characters associated with the different classes (e.g. cryptographic keys) and sub-classes (e.g. Ed25519 keys) to aid in debugging and visual inspection. Since most cryptographic constructs have three levels of classification (i.e. key -> algorithm -> variant/bit length) the type tags for CDE have three layers of classification: class, sub-class, and sub-sub-class. The secondary goal is that the binary representation of every construct has an easily parsed type tag to simplify serialization and deserializtion.
 
-To understand this spec you have to think in terms of "encoding units". An encoding unit is 24-bits of data organized as either a group of four 6-bit base 64 words (e.g. 000000 111111 000000 111111) or a group of three 8-bit words (e.g. 00000000 11111111 00000000). The group of four 6-bit words is used for encoding the data using ASCII characters in the same way that Base64 encoding works. Each of the 6-bit words maps to an ASCII character in a table of 64 characters that is similar to the Base64 table but is unique to CDE. The result is that each encoding unit is represented by four ASCII characters in the text encoding. The group of three 8-bit words is used for encoding the data when using binary. Either way, each encoding unit is 24-bits in length making it easy to encode any arbitrary data in either form depending on the system.
+To understand this spec you have to think in terms of "encoding units". An encoding unit is 24-bits of data organized as either a group of four 6-bit base 64 words (e.g. `000000 111111 000000 111111`) or a group of three 8-bit words (e.g. `00000000 11111111 00000000`). The group of four 6-bit words is used for encoding the data using ASCII characters in the same way that Base64 encoding works. Each of the 6-bit words maps to an ASCII character in a table of 64 characters that is similar to the Base64 table but is unique to CDE. The result is that each encoding unit is represented by four ASCII characters in the text encoding. The group of three 8-bit words is used for encoding the data when using binary. Either way, each encoding unit is 24-bits in length making it easy to encode any arbitrary data in either form depending on the system.
 
 The diagram below illustrates how each 24-bits encoding unit is split into either four, 6-bit words for the text encoding or three, 8-bit words for the binary encoding.
 
