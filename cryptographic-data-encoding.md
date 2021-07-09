@@ -1,5 +1,5 @@
 # Cryptographic Data Encoding (CDE)
-Version: v0.0.7 Pre-Draft  
+Version: v0.0.8 Pre-Draft  
 Date: July 9, 2021  
 License: CC BY 4.0  
 Author: Dave Huseby <dwh@trustframe.com>  
@@ -159,7 +159,7 @@ struct {
 
 ## Lists and Non-Typed
 
-CDE is specifically designed to support encoding arbitrarily complex cryptographic data structures/constructs. The simplest way to achieve that is to support recursive lists. CDE achieves this using the `-` (hyphen) character (e.g. 0b111110 6-bit word) to indicate that the encoded construct is a list of other constructs. The `-` character is only used in the sub-class field to indicate a list of constructs of the given class.
+CDE is specifically designed to support encoding arbitrarily complex cryptographic data structures/constructs. The simplest way to achieve that is to support recursive lists. CDE achieves this using the `-` (hyphen) character (e.g. 0b011111 6-bit word) to indicate that the encoded construct is a list of other constructs.
 
 Sometimes it is useful to have a list of constructs of mixed types. CDE supports this by using the `_` (underscore) (e.g. 0b111111 6-bit word) to indicate that the class or sub-class is not specified.
 
@@ -173,7 +173,7 @@ Typed lists are specified by combining a class code other than `-` or `_` with `
        encoding unit 1          optional encoding unit 2
  /--------------------------/ /--------------------------/
 /--1--//--2--//--3--//--4--/ /--5--//--6--//--7--//--8--/. 6-bit words
-fccccc 111110 fsssxx xxxxxx  xxxxxx xxxxxx xxxxxx xxxxxx
+fccccc 011111 fsssxx xxxxxx  xxxxxx xxxxxx xxxxxx xxxxxx
 ||   | |    | || ||       |                            |
 ||   | |    | || |+-------|----------------------------+.. extended length
 ||   | |    | || |+-------+............................... short length
@@ -192,7 +192,7 @@ Non-typed lists are specified by combining the `_` class code with the `-` sub- 
        encoding unit 1          optional encoding unit 2
  /--------------------------/ /--------------------------/
 /--1--//--2--//--3--//--4--/ /--5--//--6--//--7--//--8--/. 6-bit words
-111111 111110 fsssxx xxxxxx  xxxxxx xxxxxx xxxxxx xxxxxx
+111111 011111 fsssxx xxxxxx  xxxxxx xxxxxx xxxxxx xxxxxx
 |    | |    | || ||       |                            |
 |    | |    | || |+-------|----------------------------+.. extended length
 |    | |    | || |+-------+............................... short length
@@ -210,7 +210,7 @@ A list of lists is really just a typed list with the `-` list code as the class 
        encoding unit 1          optional encoding unit 2
  /--------------------------/ /--------------------------/
 /--1--//--2--//--3--//--4--/ /--5--//--6--//--7--//--8--/. 6-bit words
-111110 111110 fsssxx xxxxxx  xxxxxx xxxxxx xxxxxx xxxxxx
+011111 011111 fsssxx xxxxxx  xxxxxx xxxxxx xxxxxx xxxxxx
 |    | |    | || ||       |                            |
 |    | |    | || |+-------|----------------------------+.. extended length
 |    | |    | || |+-------+............................... short length
@@ -491,3 +491,4 @@ Non-Typed     '_'
 * v0.0.5, July 7, 2021 -- Renamed this to Cryptographic Data Encoding and pushed to [Github](https://github.com/TrustFrame/cryptographic-data-encoding)
 * v0.0.6, July 7, 2021 -- Cleaned up formatting and renaming.
 * v0.0.7, July 9, 2021 -- Moved list type code '-' to a non-experimental index.
+* v0.0.8, July 9, 2021 -- Cleaned up the working and examples from moving '-'.
