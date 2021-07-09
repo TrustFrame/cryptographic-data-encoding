@@ -1,6 +1,6 @@
 # Cryptographic Data Encoding (CDE)
-Version: v0.0.6 Pre-Draft  
-Date: July 7, 2021  
+Version: v0.0.7 Pre-Draft  
+Date: July 9, 2021  
 License: CC BY 4.0  
 Author: Dave Huseby <dwh@trustframe.com>  
 Copyright: (c) TrustFrame, Inc. 2021  
@@ -274,12 +274,12 @@ Index  Binary  B64  CDE      Index  Binary  B64  CDE
 23     010111   X    x       55     110111   3    X
 24     011000   Y    y       56     111000   4    Y
 25     011001   Z    z       57     111001   5    Z
-26     011010   a    0       58     111010   6    6
-27     011011   b    1       59     111011   7    7
-28     011100   c    2       60     111100   8    8
-29     011101   d    3       61     111101   9    9
-30     011110   e    4       62     111110   -    -
-31     011111   f    5       63     111111   _    _
+26     011010   a    0       58     111010   6    5
+27     011011   b    1       59     111011   7    6
+28     011100   c    2       60     111100   8    7
+29     011101   d    3       61     111101   9    8
+30     011110   e    4       62     111110   -    9
+31     011111   f    -       63     111111   _    _
 ```
 
 ## Proposed Classes
@@ -490,3 +490,4 @@ Non-Typed     '_'
 * v0.0.4, July 6, 2021 -- Added examples of how to work with the bit fields in the first three characters when using a text oriented language such as Javascript.
 * v0.0.5, July 7, 2021 -- Renamed this to Cryptographic Data Encoding and pushed to [Github](https://github.com/TrustFrame/cryptographic-data-encoding)
 * v0.0.6, July 7, 2021 -- Cleaned up formatting and renaming.
+* v0.0.7, July 9, 2021 -- Moved list type code '-' to a non-experimental index.
