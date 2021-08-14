@@ -6,6 +6,7 @@ Version: v0.0.9 Pre-Draft
 Date: August 13, 2021  
 License: CC BY 4.0  
 Author: Dave Huseby <dave@cryptid.tech>  
+Reference Implementation: https://github.com/cryptidtech/cde  
 Copyright: (c) CryptID Technologies, Inc. 2021  
 
 This cryptographic data encoding (CDE) proposal is for encoding of cryptographic data as into a self-describing format using a method that simplifies both ASCII (base 64) and binary (base 2) serialization/deserialization. It has some additional novel properties (e.g. easy visual inspection of ASCII, simple parsing in binary) that make it especially useful for encoding cryptographic data.
