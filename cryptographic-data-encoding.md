@@ -2,7 +2,7 @@
 
 [![hackmd-github-sync-badge](https://hackmd.io/y1IYN_9RRkCxL6lFUpkhbQ/badge)](https://hackmd.io/y1IYN_9RRkCxL6lFUpkhbQ)
 
-Version: v0.0.9 Pre-Draft  
+Version: v0.0.11 Pre-Draft  
 Date: August 13, 2021  
 License: CC BY 4.0  
 Author: Dave Huseby <dave@cryptid.tech>  
@@ -244,7 +244,7 @@ By using the non-typed code `_` for both the class and sub-class, CDE supports e
 
 ## Extensibility
 
-Normally, an encoding like this uses a standard Base64 alphabet for encoding the 6-bit base 64 numbers as ASCII characters. But since we have a hard requirment for extensibility, this standard uses a slightly modified Base64 alphabet derived from the URL-safe variant. The CDE variant places the lower-case letters and first six numeric characters in the first 32 index places with the upper-case and last four numbers followed by hyphen and underscore in the last 32 index places. This new arrangement makes the most significant bit a flag that can be tested easily in binary and determined visually in text (i.e. upper case vs lower case letters, lower number vs upper numbers).
+Normally, an encoding like this uses a standard Base64 alphabet for encoding the 6-bit base 64 numbers as ASCII characters. But since we have a hard requirment for extensibility, this standard uses a slightly modified Base64 alphabet derived from the URL-safe variant. The CDE variant places the lower-case letters, first five numeric characters, and hypen (`-`) in the first 32 index places with the upper-case, last five numbers followed by underscore (`_`) in the last 32 index places. This new arrangement makes the most significant bit a flag that can be tested easily in binary and determined visually in text (i.e. upper case vs lower case letters, lower number vs upper numbers).
 
 Since the class and sub-class text encoding is designed to be the same for all constructs of a given class (i.e. all cryptographic keys begin with `k`) and sub-class (i.e. all Ed25519 keys begin with `ke`) by re-arranging the encoding alphabet for CDE, it supports experimental extensions by using upper case versions of the same letters. For instance, 4,096-bit RSA keys are encoded such that their text representation always begins with `kr` (i.e. `k` for key, `r` for RSA) but experimental 16,384-bit RSA keys always begin with `Kr`. The former says the construct is a standard RSA key (e.g. 4,096-bit RSA key) and the latter says the construct is an experimental RSA key (e.g. 16,384-bit RSA key).
 
@@ -315,6 +315,7 @@ Class      Standard      Experimental
 AEAD       'a'           'A'
 Cipher     'c'           'C'
 Digest     'd'           'D'
+Proof      'f'           'F'
 HMAC       'h'           'H'
 Identifier 'i'           'I'
 Key        'k'           'K'
@@ -407,6 +408,13 @@ SHAKE128        4
 SHAKE256        5
 ```
 
+### Proof
+
+```
+Sub-Class     Standard
+```
+
+
 ### HMAC
 
 ```
@@ -458,7 +466,6 @@ Sub-Class     Standard
 ```
 Sub-Class     Standard
 Bitcoin       'b'
-CCLang        'c'
 Solidity      's'
 ```
 
