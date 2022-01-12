@@ -2,8 +2,8 @@
 
 [![hackmd-github-sync-badge](https://hackmd.io/y1IYN_9RRkCxL6lFUpkhbQ/badge)](https://hackmd.io/y1IYN_9RRkCxL6lFUpkhbQ)
 
-Version: v0.0.12 Pre-Draft  
-Date: January 8, 2022  
+Version: v0.0.13 Pre-Draft  
+Date: January 12, 2022  
 License: CC BY 4.0  
 Author: Dave Huseby <dave@cryptid.tech>  
 Reference Implementation: https://github.com/cryptidtech/cde  
@@ -408,28 +408,66 @@ PRF           'p'
 Ratchet       'r'
 ```
 
+#### AD
+
+```
+Sub-Sub-Class   Value
+Data            0
+Meta            1
+```
+
 #### CLR
 
 ```
 Sub-Sub-Class   Value
-Send            0
-Recv            1
+Data_Send       0
+Data_Recv       1
+Meta_Send       2
+Meta_Recv       3
 ```
 
 #### ENC
 
 ```
 Sub-Sub-Class   Value
-Send            0
-Recv            1
+Data_Send       0
+Data_Recv       1
+Meta_Send       2
+Meta_Recv       3
+```
+
+#### KEY
+
+```
+Sub-Sub-Class   Value
+Data            0
+Meta            1
 ```
 
 #### MAC
 
 ```
 Sub-Sub-Class   Value
-Send            0
-Recv            1
+Data_Send       0
+Data_Recv       1
+Meta_Send       2
+Meta_Recv       3
+```
+
+#### PRF
+
+```
+Sub-Sub-Class   Value
+Data            0
+Meta            1
+```
+
+#### RATCHET
+
+```
+Sub-Sub-Class   Value
+Data            0
+Meta            1
 ```
 
 ### HMAC
