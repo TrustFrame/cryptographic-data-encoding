@@ -2,8 +2,8 @@
 
 [![hackmd-github-sync-badge](https://hackmd.io/y1IYN_9RRkCxL6lFUpkhbQ/badge)](https://hackmd.io/y1IYN_9RRkCxL6lFUpkhbQ)
 
-Version: v0.0.13 Pre-Draft  
-Date: January 12, 2022  
+Version: v0.0.14 Pre-Draft  
+Date: January 19, 2022  
 License: CC BY 4.0  
 Author: Dave Huseby <dave@cryptid.tech>  
 Reference Implementation: https://github.com/cryptidtech/cde  
@@ -496,8 +496,9 @@ RSA           'r'
 Bls12381      'b'
 K256          'k'
 P256          'p'
-Chacha20      'c'
 AES           'a'
+Chacha20      'c'
+Diffie-Hellman'd'
 ```
 
 #### Ed25519
@@ -538,6 +539,8 @@ Secret Key      1
 Sub-Sub-Class   Value
 Public Key      0
 Secret Key      1
+Verifying Key   2
+Signing Key     3
 ```
 
 #### P256
@@ -554,6 +557,8 @@ Secret Key      1
 Sub-Sub-Class   Value
 128-bit         0
 256-bit         1
+Verifying Key   2
+Signing Key     3
 ```
 
 ### Nonce
@@ -615,3 +620,4 @@ Non-Typed     '_'
 * v0.0.7, July 9, 2021 -- Moved list type code '-' to a non-experimental index.
 * v0.0.8, July 9, 2021 -- Cleaned up the working and examples from moving '-'.
 * v0.0.12, January 8, 2022 -- Reworked the length to be unsigned varint, added classes/sub-classes
+* v0.0.14, January 19, 2022 -- Added P256/K256 signing/verifying keys and Diffie-Hellman shared secrets
