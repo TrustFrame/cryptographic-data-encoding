@@ -2,7 +2,7 @@
 
 [![hackmd-github-sync-badge](https://hackmd.io/y1IYN_9RRkCxL6lFUpkhbQ/badge)](https://hackmd.io/y1IYN_9RRkCxL6lFUpkhbQ)
 
-Version: v0.0.14 Pre-Draft  
+Version: v0.0.15 Pre-Draft  
 Date: January 19, 2022  
 License: CC BY 4.0  
 Author: Dave Huseby <dave@cryptid.tech>  
@@ -490,42 +490,36 @@ Email         'e'
 ```
 Sub-Class     Standard
 
-Ed25519       'e'
-X25519        'x'
-RSA           'r'
+AES           'a'
 Bls12381      'b'
+Chacha20      'c'
+Ed25519       'e'
 K256          'k'
 P256          'p'
-AES           'a'
-Chacha20      'c'
-Diffie-Hellman'd'
+RSA           'r'
+Shared-Secret 's'
+X25519        'x'
 ```
 
-#### Ed25519
-
-```
-Sub-Sub-Class   Value
-Public Key      0
-Secret Key      1
-```
-
-#### X25519
+#### AES
 
 ```
 Sub-Sub-Class   Value
-Public Key      0
-Secret Key      1
-```
-
-#### RSA
-
-```
-Sub-Sub-Class   Value
-Public Key      0
-Secret Key      1
+128-bit         0
+256-bit         1
+Verifying Key   2
+Signing Key     3
 ```
 
 #### Bls12381
+
+```
+Sub-Sub-Class   Value
+Public Key      0
+Secret Key      1
+```
+
+#### Ed25519
 
 ```
 Sub-Sub-Class   Value
@@ -551,14 +545,29 @@ Public Key      0
 Secret Key      1
 ```
 
-#### AES
+#### RSA
 
 ```
 Sub-Sub-Class   Value
-128-bit         0
-256-bit         1
-Verifying Key   2
-Signing Key     3
+Public Key      0
+Secret Key      1
+```
+
+#### Shared-Secret
+
+```
+Sub-Sub-Class   Value
+Pre-shared Key                0
+PublicKey Diffie-Hellman      1
+Elliptic Curve Diffie-Hellman 2
+```
+
+#### X25519
+
+```
+Sub-Sub-Class   Value
+Public Key      0
+Secret Key      1
 ```
 
 ### Nonce
@@ -621,3 +630,4 @@ Non-Typed     '_'
 * v0.0.8, July 9, 2021 -- Cleaned up the working and examples from moving '-'.
 * v0.0.12, January 8, 2022 -- Reworked the length to be unsigned varint, added classes/sub-classes
 * v0.0.14, January 19, 2022 -- Added P256/K256 signing/verifying keys and Diffie-Hellman shared secrets
+* v0.0.15, January 19, 2022 -- Reworked shared secrets to include pre-shared keys and dh agreements
