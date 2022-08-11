@@ -2,8 +2,8 @@
 
 [![hackmd-github-sync-badge](https://hackmd.io/y1IYN_9RRkCxL6lFUpkhbQ/badge)](https://hackmd.io/y1IYN_9RRkCxL6lFUpkhbQ)
 
-Version: v0.0.15 Pre-Draft  
-Date: January 19, 2022  
+Version: v0.0.16 Pre-Draft  
+Date: August 11, 2022  
 License: CC BY 4.0  
 Author: Dave Huseby <dave@cryptid.tech>  
 Reference Implementation: https://github.com/cryptidtech/cde  
@@ -574,6 +574,43 @@ Secret Key      1
 
 ```
 Sub-Class     Standard
+u16           'h'
+u32           'w'
+u64           'd'
+u128          'q'
+bytes         'b'
+```
+
+#### u16
+
+```
+Sub-Sub-Class   Value
+Little-endian   0
+Big-endian      1
+```
+
+#### u32
+
+```
+Sub-Sub-Class   Value
+Little-endian   0
+Big-endian      1
+```
+
+#### u64
+
+```
+Sub-Sub-Class   Value
+Little-endian   0
+Big-endian      1
+```
+
+#### u128
+
+```
+Sub-Sub-Class   Value
+Little-endian   0
+Big-endian      1
 ```
 
 ### Policy
@@ -631,3 +668,4 @@ Non-Typed     '_'
 * v0.0.12, January 8, 2022 -- Reworked the length to be unsigned varint, added classes/sub-classes
 * v0.0.14, January 19, 2022 -- Added P256/K256 signing/verifying keys and Diffie-Hellman shared secrets
 * v0.0.15, January 19, 2022 -- Reworked shared secrets to include pre-shared keys and dh agreements
+* v0.0.16, August 11, 2022 -- Expanded the nonce sub-classes and sub-sub-classes
